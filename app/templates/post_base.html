@@ -1,0 +1,49 @@
+{% for post in posts.items %}
+    <div class="media">
+            <div class="media-left">
+                <a href="{{ url_for('user_page', username=post.user.username) }}">
+                  <img class="media-object" src="{{ post.user.avatar_img }}" alt="duitang.jpg" width="60px">
+                </a>
+            </div>
+            <div class="media-body">
+                <h5 class="media-heading">{{ post.user.username }}</h5>
+                <small class="text-muted">{{ post.timestamp }}</small>
+                <p>{{ post.body}}</p>
+                <br>
+            </div>
+    </div>
+{% endfor %}
+<nav aria-label="Page navigation" class="text-center">
+
+      <ul class="pagination">
+          {% if posts.prev_num %}
+{#                          如果前一页能返回页码 prev_num#}
+            <li>
+              <a href="{{ url_for('index',page = posts.prev_num) }}" aria-label="Previous">
+                <span aria-hidden="true">&laquo; Prev</span>
+              </a>
+            </li>
+          {% endif %}
+{#                    {% for page in range(posts.pages) %}#}
+              {% for page in posts.iter_pages(left_edge=2,left_current=2,right_current=2,right_edge=2) %}
+{#                          iter_pages()实现精减页码占用位置 #}
+                    {% if page %}
+{#                            <li><a href="{{ url_for('index', page=page+1) }}">{{ page+1 }}</a></li>#}
+                        <li class="{% if page == posts.page %}active{% endif %} "><a href="{{ url_for('index', page=page) }}">{{ page }}</a></li>
+{#                                        posts.page当前面，page为所有页，也就是当点击页在所有页码中一个，avtive激活显示颜色 #}
+                    {% else %}
+                        <li class="disabled"><a href="#" >...</a></li>
+                    {% endif %}
+              {% endfor %}
+
+              {% if posts.next_num %}
+{#                            next_num如果能取到后一页是多少，就进行下面的内容#}
+                 <li>
+                      <a href="{{  url_for('index',  page=posts.next_num) }}" aria-label="Next">
+                        <span aria-hidden="true">&raquo; Next</span>
+                      </a>
+                 </li>
+              {% endif %}
+      </ul>
+
+</nav>
